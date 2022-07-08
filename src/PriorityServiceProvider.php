@@ -13,11 +13,18 @@ class PriorityServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // Register plugin
-        Taskday::register(new PriorityPlugin, 'priority');
-
         // Registering extra web routes
         Route::middleware('web')->group(__DIR__ . '/../routes/web.php');
+    
+        if (Taskday::getViewByType('kanban')) {
+            Taskday::getViewByType('kanban')->add('priority', [
+                [ "value" => 0, "name" => 'No priority', "color" => 'gray'   ],
+                [ "value" => 1, "name" => 'Low'        , "color" => 'blue'   ],
+                [ "value" => 2, "name" => 'Medium'     , "color" => 'yellow' ],
+                [ "value" => 3, "name" => 'High'       , "color" => 'orange' ],
+                [ "value" => 4, "name" => 'Urgent!'    , "color" => 'red'    ],
+            ]);
+        }
     }
 
     /**
@@ -25,6 +32,7 @@ class PriorityServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        // Register plugin
+        Taskday::register(new PriorityPlugin, 'priority');
     }
 }
